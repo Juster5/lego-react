@@ -1,0 +1,55 @@
+{
+"name": "h5-dooring",
+  "version": "1.4.0",
+  "description": "H5-Dooring是一款功能强大，开源免费的H5可视化页面配置解决方案，致力于提供一套简单方便、专业可靠、无限可能的H5落地页最佳实践。技术栈以react为主， 后台采用nodejs开发。",
+  "private": false,
+  "author": {
+    "name": "徐小夕",
+    "email": "xujiang156@qq.com",
+    "url": "http://h5.dooring.cn"
+  },
+  "keywords": [
+    "h5 editor",
+    "h5",
+    "react",
+    "antd",
+    "react-dnd",
+    "web visible"
+  ],
+  "contributors": [
+    "徐小夕 <xujiang156@qq.com> (https://github.com/MrXujiang))",
+    "mokinzhao <37622852@qq.com> (https://github.com/mokinzhao))",
+    "yehuozhili <yehuozhili@outlook.com> (https://github.com/yehuozhili))"
+  ],
+  "scripts": {
+    "pkg": "bash install.sh",
+    "start": "npm run start:ui & npm run start:editor",
+    "start:editor": "npx lerna exec --scope @h5-dooring/editor -- npm run start",
+    "start:ui": "npx lerna exec --scope @h5-dooring/ui -- npm run start",
+    "build": "npm run build:ui && npm run build:editor",
+    "build:editor": "npx lerna exec --scope @h5-dooring/editor -- npm run build",
+    "build:ui": "npx lerna exec --scope @h5-dooring/ui -- npm run build",
+    "docs:dev": "npx lerna exec --scope @h5-dooring/doc -- npm run dev",
+    "docs:build": "npx lerna exec --scope @h5-dooring/doc -- npm run build",
+    "server": "node server.js",
+    "dev": "http-server dist",
+    "test-demo": "http-server dist",
+    "postinstall": "umi generate tmp",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
+    "test": "umi-test",
+    "test:coverage": "umi-test --coverage",
+    "nocompress": "cross-env RM_TMPDIR=none COMPRESS=none umi build"
+  },
+
+  "homepage": "http://h5.dooring.cn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrXujiang/h5-Dooring.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MrXujiang/h5-Dooring/issues"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
