@@ -26,15 +26,13 @@ const Container = (props: {
   history?: any;
   location?: any;
   pstate?: any;
-  cstate?: any;
   dispatch?: any;
 }) => {
   const [scaleNum, setScale] = useState(1);
   const [collapsed, setCollapsed] = useState(false);
   const [rightColla, setRightColla] = useState(true);
-  const { pstate, cstate, dispatch } = props;
+  const { pstate, dispatch } = props;
   const pointData = pstate ? pstate.pointData : [];
-  const cpointData = cstate ? cstate.pointData : [];
 
   const changeCollapse = useMemo(() => {
     return (c: boolean) => {
@@ -186,7 +184,7 @@ const Container = (props: {
         )}
       </div>
     );
-  }, [cpointData.length, curPoint, handleDel, handleFormSave, pointData.length, rightColla]);
+  }, [curPoint, handleDel, handleFormSave, pointData.length, rightColla]);
 
   const tabRender = useMemo(() => {
     if (collapsed) {
@@ -450,5 +448,5 @@ const Container = (props: {
 };
 
 export default connect((state: StateWithHistory<any>) => {
-  return { pstate: state.present.editorModal, cstate: state.present.editorPcModal };
+  return { pstate: state.present.editorModal };
 })(Container);
