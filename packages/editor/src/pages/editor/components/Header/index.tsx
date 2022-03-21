@@ -1,5 +1,5 @@
 import React, { useRef, memo, useMemo, useState, useEffect } from 'react';
-import { Button, Input, Modal, Upload, Tooltip, Badge } from 'antd';
+import {Form, Checkbox, Button, Input, Modal, Upload, Tooltip, Badge, Popover } from 'antd';
 import {
   ArrowLeftOutlined,
   MobileOutlined,
@@ -63,8 +63,8 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
     window.open('/ide');
   };
 
-  const toVipLogin = () => {
-    window.open('/login');
+  const pageSetting = () => {
+    // window.open('/login');
   };
 
   const content = () => {
@@ -227,6 +227,54 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
     (document.getElementById('previewPage') as any).contentWindow.location.reload();
   };
 
+  const renderPageSetting = () => {
+    const onFinish = (values:any) => {
+      console.log('Success:', values);
+    };
+  
+    const onFinishFailed = (errorInfo:any) => {
+      console.log('Failed:', errorInfo);
+    };
+  
+    return (
+      <Form
+        name="pageSetting"
+        initialValues={{
+          remember: true,
+        }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="标题"
+          name="username"
+        >
+          <Input />
+        </Form.Item>
+  
+        <Form.Item
+          label="描述"
+          name="password"
+        >
+          <Input />
+        </Form.Item>
+
+  
+        <Form.Item
+          wrapperCol={{
+            offset: 8,
+            span: 20,
+          }}
+        >
+          <Button type="primary" htmlType="submit">
+            保存
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  };
+
   return (
     <div className={styles.header}>
       <div className={styles.logoArea}>
@@ -351,13 +399,15 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
         </Button>
       </div>
       <div className={styles.btnArea}>
+        <Popover placement="bottom" title="页面设置" content={renderPageSetting} trigger="click">
+          <Button type="primary" ghost  style={{ marginRight: '12px' }}>
+            <SketchOutlined />
+            页面设置
+          </Button>        
+        </Popover>
         <Button type="primary" ghost onClick={toOnlineCoding} style={{ marginRight: '12px' }}>
           <CodeOutlined />
           在线编程
-        </Button>
-        <Button type="primary" ghost onClick={toVipLogin} style={{ marginRight: '12px' }}>
-          <SketchOutlined />
-          会员登录
         </Button>
       </div>
       <Modal
