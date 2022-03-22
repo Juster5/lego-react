@@ -9,8 +9,8 @@ import { Dispatch } from 'umi';
 import { StateWithHistory } from 'redux-undo';
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
-interface SourceBoxProps {
-  pstate: { pointData: { id: string; item: any; point: any; isMenu?: any }[]; curPoint: any };
+interface TargetBoxProps {
+  pstate: { pointData: { id: string; item: any; point: any; isMenu?: any }[]; curPoint: any, pageSetting: any};
   scaleNum: number;
   canvasId: string;
   allType: string[];
@@ -24,7 +24,7 @@ interface SourceBoxProps {
   >;
 }
 const ViewRender = React.lazy(() => import('dooringUI/viewRender'));
-const TargetBox = memo((props: SourceBoxProps) => {
+const TargetBox = memo((props: TargetBoxProps) => {
   const { pstate, scaleNum, canvasId, allType, dispatch, dragState, setDragState } = props;
 
   let pointData = pstate ? pstate.pointData : [];
@@ -173,6 +173,7 @@ const TargetBox = memo((props: SourceBoxProps) => {
                   <React.Suspense fallback="loading">
                     <ViewRender
                       pointData={pointData}
+                      pageData={pstate.pageSetting}
                       width={canvasRect[0] || 0}
                       dragStop={dragStop}
                       onDragStart={onDragStart}
@@ -199,6 +200,7 @@ const TargetBox = memo((props: SourceBoxProps) => {
     pointData,
     scaleNum,
     setDragState,
+    pstate
   ]);
 
   return (

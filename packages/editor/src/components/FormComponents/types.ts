@@ -244,5 +244,8 @@ export type baseFormUnionType =
 export type TFormItemsDefaultType = Array<baseFormUnion>;
 
 export type PageSettingType = {
-  
+  title?: string,
+  description?: string,
+  backgroundColor?: string,
+  backgroundImage?: string
 }

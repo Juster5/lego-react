@@ -1,5 +1,5 @@
 import React, { useRef, memo, useMemo, useState, useEffect } from 'react';
-import {Form, Checkbox, Button, Input, Modal, Upload, Tooltip, Badge, Popover } from 'antd';
+import { Form, Checkbox, Button, Input, Modal, Upload, Tooltip, Badge, Popover } from 'antd';
 import {
   ArrowLeftOutlined,
   MobileOutlined,
@@ -15,6 +15,7 @@ import {
   InstagramOutlined,
   WechatOutlined,
 } from '@ant-design/icons';
+import Color from '@/components/FormComponents/Color';
 import { history } from 'umi';
 import QRCode from 'qrcode.react';
 import { saveAs } from 'file-saver';
@@ -23,6 +24,9 @@ import { uuid } from '@/utils/tool';
 import styles from './index.less';
 import MyPopover from 'yh-react-popover';
 import { encode } from 'querystring';
+import { PageSettingType } from '@/components/FormComponents/types';
+import { connect } from 'dva';
+import { ActionCreators, StateWithHistory } from 'redux-undo';
 
 const { confirm } = Modal;
 
@@ -35,10 +39,13 @@ interface HeaderComponentProps {
   undohandler: any;
   redohandler: any;
   importTpl: any;
+  pstate: any;
+  dispatch: any;
 }
 
 const HeaderComponent = memo((props: HeaderComponentProps) => {
-  const { pointData, location, clearData, undohandler, redohandler, importTpl } = props;
+  const { pointData, location, clearData, undohandler, redohandler, importTpl, pstate, dispatch } =
+    props;
   const [showModalIframe, setShowModalIframe] = useState(false);
   const [showFaceModal, setShowFaceModal] = useState(false);
   const [faceUrl, setFaceUrl] = useState('');
@@ -54,8 +61,12 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
     //       : `/preview?tid=${props.location.query.tid}`,
     //   );
     // }, 600);
-     setTimeout(() => {
-      window.open(`http://localhost:8008/preview?tid=${props.location.query.tid}&pointData=${encodeURI(JSON.stringify(pointData))}`);
+    setTimeout(() => {
+      window.open(
+        `http://localhost:8008/preview?tid=${props.location.query.tid}&pointData=${encodeURI(
+          JSON.stringify(pointData),
+        )}`,
+      );
     }, 600);
   };
 
@@ -70,7 +81,11 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
   const content = () => {
     const { tid } = location.query || '';
     return (
-      <QRCode value={`${window.location.protocol}//http://localhost:8008/preview?tid=${props.location.query.tid}&pointData=${JSON.stringify(pointData)}`} />
+      <QRCode
+        value={`${window.location.protocol}//http://localhost:8008/preview?tid=${
+          props.location.query.tid
+        }&pointData=${JSON.stringify(pointData)}`}
+      />
     );
   };
 
@@ -111,7 +126,7 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
       cancelText: '取消',
       onOk() {
         let name = iptRef.current!.state.value;
-        req.post('/visible/tpl/save', { name, tpl: pointData }).then(res => {
+        req.post('/visible/tpl/save', { name, tpl: pointData }).then((res) => {
           console.log(res);
         });
       },
@@ -205,7 +220,7 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
       beforeUpload(file: File) {
         // 解析并提取excel数据
         let reader = new FileReader();
-        reader.onload = function(e: Event) {
+        reader.onload = function (e: Event) {
           let data = (e as any).target.result;
           importTpl && importTpl(JSON.parse(data));
         };
@@ -227,40 +242,41 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
     (document.getElementById('previewPage') as any).contentWindow.location.reload();
   };
 
-  const renderPageSetting = () => {
-    const onFinish = (values:any) => {
+  const renderPageSetting = (pageSetting: PageSettingType) => {
+    const onFinish = (values: any) => {
+      dispatch({
+        type: 'editorModal/modPageSetting',
+        payload: {
+          ...values,
+        },
+      });
       console.log('Success:', values);
     };
-  
-    const onFinishFailed = (errorInfo:any) => {
+
+    const onFinishFailed = (errorInfo: any) => {
       console.log('Failed:', errorInfo);
     };
-  
+
     return (
       <Form
         name="pageSetting"
-        initialValues={{
-          remember: true,
-        }}
+        initialValues={pageSetting}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item
-          label="标题"
-          name="username"
-        >
-          <Input />
-        </Form.Item>
-  
-        <Form.Item
-          label="描述"
-          name="password"
-        >
+        <Form.Item label="标题" name="title">
           <Input />
         </Form.Item>
 
-  
+        <Form.Item label="描述" name="description">
+          <Input />
+        </Form.Item>
+
+        <Form.Item label="背景颜色" name="backgroundColor">
+          <Color />
+        </Form.Item>
+                
         <Form.Item
           wrapperCol={{
             offset: 8,
@@ -399,11 +415,16 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
         </Button>
       </div>
       <div className={styles.btnArea}>
-        <Popover placement="bottom" title="页面设置" content={renderPageSetting} trigger="click">
-          <Button type="primary" ghost  style={{ marginRight: '12px' }}>
+        <Popover
+          placement="bottom"
+          title="页面设置"
+          content={renderPageSetting(pstate.pageSetting)}
+          trigger="click"
+        >
+          <Button type="primary" ghost style={{ marginRight: '12px' }}>
             <SketchOutlined />
             页面设置
-          </Button>        
+          </Button>
         </Popover>
         <Button type="primary" ghost onClick={toOnlineCoding} style={{ marginRight: '12px' }}>
           <CodeOutlined />
@@ -440,4 +461,6 @@ const HeaderComponent = memo((props: HeaderComponentProps) => {
   );
 });
 
-export default HeaderComponent;
+export default connect((state: StateWithHistory<any>) => ({
+  pstate: state.present.editorModal,
+}))(HeaderComponent);

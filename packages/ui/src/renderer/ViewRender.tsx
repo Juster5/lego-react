@@ -33,7 +33,7 @@ const ViewRender = memo((props: ViewProps) => {
       onResizeStop={onResizeStop}
       style={{
         minHeight: '100vh',
-        backgroundColor: pageData && pageData.bgColor,
+        backgroundColor: pageData && pageData.backgroundColor,
         backgroundImage:
           pageData && pageData.bgImage ? `url(${pageData.bgImage[0].url})` : 'initial',
         backgroundSize: '100%',
