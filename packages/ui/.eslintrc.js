@@ -16,7 +16,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-use-before-define':'off',
-    '@typescript-eslint/no-shadow':'off'
+    '@typescript-eslint/no-shadow':'off',
+    '@typescript-eslint/array-type': false
   },
   globals: {
     ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: true,

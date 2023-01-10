@@ -9,9 +9,8 @@ import { Dispatch } from 'umi';
 import { StateWithHistory } from 'redux-undo';
 import { Menu, Item, MenuProvider } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
-interface SourceBoxProps {
-  pstate: { pointData: { id: string; item: any; point: any; isMenu?: any }[]; curPoint: any };
-  cstate: { pointData: { id: string; item: any; point: any }[]; curPoint: any };
+interface TargetBoxProps {
+  pstate: { pointData: { id: string; item: any; point: any; isMenu?: any }[]; curPoint: any, pageSetting: any};
   scaleNum: number;
   canvasId: string;
   allType: string[];
@@ -25,11 +24,10 @@ interface SourceBoxProps {
   >;
 }
 const ViewRender = React.lazy(() => import('dooringUI/viewRender'));
-const TargetBox = memo((props: SourceBoxProps) => {
-  const { pstate, scaleNum, canvasId, allType, dispatch, dragState, setDragState, cstate } = props;
+const TargetBox = memo((props: TargetBoxProps) => {
+  const { pstate, scaleNum, canvasId, allType, dispatch, dragState, setDragState } = props;
 
   let pointData = pstate ? pstate.pointData : [];
-  const cpointData = cstate ? cstate.pointData : [];
 
   const [canvasRect, setCanvasRect] = useState<number[]>([]);
   const [isShowTip, setIsShowTip] = useState(true);
@@ -71,7 +69,7 @@ const TargetBox = memo((props: SourceBoxProps) => {
         payload: { ...curPointData, point: newItem, status: 'inToCanvas' },
       });
     };
-  }, [cpointData, dispatch, pointData]);
+  }, [dispatch, pointData]);
 
   const onDragStart: ItemCallback = useMemo(() => {
     return (layout, oldItem, newItem, placeholder, e, element) => {
@@ -175,6 +173,7 @@ const TargetBox = memo((props: SourceBoxProps) => {
                   <React.Suspense fallback="loading">
                     <ViewRender
                       pointData={pointData}
+                      pageData={pstate.pageSetting}
                       width={canvasRect[0] || 0}
                       dragStop={dragStop}
                       onDragStart={onDragStart}
@@ -201,6 +200,7 @@ const TargetBox = memo((props: SourceBoxProps) => {
     pointData,
     scaleNum,
     setDragState,
+    pstate
   ]);
 
   return (
@@ -213,5 +213,4 @@ const TargetBox = memo((props: SourceBoxProps) => {
 
 export default connect((state: StateWithHistory<any>) => ({
   pstate: state.present.editorModal,
-  cstate: state.present.editorPcModal,
 }))(TargetBox);

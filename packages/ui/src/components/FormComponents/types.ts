@@ -241,3 +241,9 @@ export type baseFormUnionType =
   | baseFormDateTpl['type'];
 
 export type TFormItemsDefaultType = Array<baseFormUnion>;
+
+export type MarginLeftType = number
+export type MarginRightType = number
+export type PaddingLeftType = number
+export type PaddingRightType = number
+

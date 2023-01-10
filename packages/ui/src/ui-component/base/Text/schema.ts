@@ -7,11 +7,14 @@ import {
   TNumberDefaultType,
   TSelectDefaultType,
   TTextDefaultType,
+  ISwitchConfigType,
+  TSwitchDefaultType
 } from '@/components/FormComponents/types';
 
 export type TTextSelectKeyType = 'left' | 'right' | 'center';
 export type TTextEditData = Array<
-  ITextConfigType | IColorConfigType | INumberConfigType | ISelectConfigType<TTextSelectKeyType>
+  ITextConfigType | IColorConfigType | INumberConfigType | ISelectConfigType<TTextSelectKeyType> |
+  ISwitchConfigType
 >;
 export interface ITextConfig {
   text: TTextDefaultType;
@@ -19,6 +22,7 @@ export interface ITextConfig {
   fontSize: TNumberDefaultType;
   align: TSelectDefaultType<TTextSelectKeyType>;
   lineHeight: TNumberDefaultType;
+  flexCenter: TSwitchDefaultType;
 }
 
 export interface ITextSchema {
@@ -66,6 +70,11 @@ const Text: ITextSchema = {
       name: '行高',
       type: 'Number',
     },
+    {
+      key: 'flexCenter',
+      name: '弹性居中',
+      type: 'Switch'
+    }
   ],
   config: {
     text: '我是文本',
@@ -73,6 +82,7 @@ const Text: ITextSchema = {
     fontSize: 18,
     align: 'center',
     lineHeight: 2,
+    flexCenter: false
   },
 };
 export default Text;

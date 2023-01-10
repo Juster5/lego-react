@@ -6,6 +6,7 @@
 import { uuid } from '@/utils/tool';
 import key from 'keymaster';
 const pointData = localStorage.getItem('userData') || '[]';
+const pageSetting = localStorage.getItem('pageSetting') || `{}`
 
 function overSave(name, data) {
   localStorage.setItem(name, JSON.stringify(data));
@@ -16,6 +17,7 @@ export default {
   state: {
     pointData: JSON.parse(pointData),
     curPoint: null,
+    pageSetting: JSON.parse(pageSetting)
   },
   reducers: {
     addPointData(state, { payload }) {
@@ -116,6 +118,13 @@ export default {
         curPoint: null,
       };
     },
+    modPageSetting (state, { payload }) {
+      const pageSetting = state.pageSetting
+      const newPageSetting = Object.assign({}, pageSetting, payload)
+      state.pageSetting = newPageSetting
+      overSave('pageSetting', state.pageSetting)
+      return state
+    }
   },
   effects: {},
   subscriptions: {

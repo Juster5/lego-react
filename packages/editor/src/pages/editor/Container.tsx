@@ -10,8 +10,8 @@ import {
 import { connect } from 'dva';
 import HeaderComponent from './components/Header';
 import CanvasControl from './components/CanvasControl';
-import SourceBox from './TargetBox';
-import TargetBox from './SourceBox';
+import Target from './TargetBox';
+import Source from './SourceBox';
 import Calibration from 'components/Calibration';
 import { FormRender } from '@/core';
 import dooringCompt from 'dooringUI/components';
@@ -26,15 +26,13 @@ const Container = (props: {
   history?: any;
   location?: any;
   pstate?: any;
-  cstate?: any;
   dispatch?: any;
 }) => {
   const [scaleNum, setScale] = useState(1);
   const [collapsed, setCollapsed] = useState(false);
   const [rightColla, setRightColla] = useState(true);
-  const { pstate, cstate, dispatch } = props;
+  const { pstate, dispatch } = props;
   const pointData = pstate ? pstate.pointData : [];
-  const cpointData = cstate ? cstate.pointData : [];
 
   const changeCollapse = useMemo(() => {
     return (c: boolean) => {
@@ -186,7 +184,7 @@ const Container = (props: {
         )}
       </div>
     );
-  }, [cpointData.length, curPoint, handleDel, handleFormSave, pointData.length, rightColla]);
+  }, [curPoint, handleDel, handleFormSave, pointData.length, rightColla]);
 
   const tabRender = useMemo(() => {
     if (collapsed) {
@@ -205,7 +203,7 @@ const Container = (props: {
             {template.map(
               (value: { type: string | number | symbol }, i: React.Key | null | undefined) => {
                 return (
-                  <TargetBox item={value} key={i} canvasId={canvasId}>
+                  <Source item={value} key={i} canvasId={canvasId}>
                     <React.Suspense fallback="loading">
                       <DynamicEngine
                         {...value}
@@ -214,7 +212,7 @@ const Container = (props: {
                         isTpl={true}
                       />
                     </React.Suspense>
-                  </TargetBox>
+                  </Source>
                 );
               },
             )}
@@ -223,7 +221,7 @@ const Container = (props: {
             <div className={styles.ctitle}>媒体组件</div>
             {mediaTpl.map(
               (value: { type: string | number | symbol }, i: React.Key | null | undefined) => (
-                <TargetBox item={value} key={i} canvasId={canvasId}>
+                <Source item={value} key={i} canvasId={canvasId}>
                   <React.Suspense fallback="loading">
                     <DynamicEngine
                       {...value}
@@ -232,7 +230,7 @@ const Container = (props: {
                       isTpl={true}
                     />
                   </React.Suspense>
-                </TargetBox>
+                </Source>
               ),
             )}
           </TabPane>
@@ -240,7 +238,7 @@ const Container = (props: {
             <div className={styles.ctitle}>可视化组件</div>
             {graphTpl.map(
               (value: { type: string | number | symbol }, i: React.Key | null | undefined) => (
-                <TargetBox item={value} key={i} canvasId={canvasId}>
+                <Source item={value} key={i} canvasId={canvasId}>
                   <React.Suspense fallback="loading">
                     <DynamicEngine
                       {...value}
@@ -249,7 +247,7 @@ const Container = (props: {
                       isTpl={true}
                     />
                   </React.Suspense>
-                </TargetBox>
+                </Source>
               ),
             )}
           </TabPane>
@@ -257,7 +255,7 @@ const Container = (props: {
             <div className={styles.ctitle}>营销组件</div>
             {shopTpl.map(
               (value: { type: string | number | symbol }, i: React.Key | null | undefined) => (
-                <TargetBox item={value} key={i} canvasId={canvasId}>
+                <Source item={value} key={i} canvasId={canvasId}>
                   <React.Suspense fallback="loading">
                     <DynamicEngine
                       {...value}
@@ -266,7 +264,7 @@ const Container = (props: {
                       isTpl={true}
                     />
                   </React.Suspense>
-                </TargetBox>
+                </Source>
               ),
             )}
           </TabPane>
@@ -416,7 +414,7 @@ const Container = (props: {
           <div className={styles.tickMarkLeft}>
             <Calibration direction="right" id="calibrationRight" multiple={scaleNum} />
           </div>
-          <SourceBox
+          <Target
             dragState={dragstate}
             setDragState={setDragState}
             scaleNum={scaleNum}
@@ -450,5 +448,5 @@ const Container = (props: {
 };
 
 export default connect((state: StateWithHistory<any>) => {
-  return { pstate: state.present.editorModal, cstate: state.present.editorPcModal };
+  return { pstate: state.present.editorModal };
 })(Container);
